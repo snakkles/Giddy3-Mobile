@@ -20,10 +20,13 @@ int          web_WaitEvent( SDL_Event *ev );
 void         web_SwapBuffers( void );
 SDL_Surface *web_SetVideoMode( int w, int h, int bpp, Uint32 flags );
 void         web_SyncSaves( void );
+int          web_OpenAudio( void (*cb)( void *, Sint8 *, int ), int freq );
+void         web_PauseAudio( int pause );
 
 #define SDL_PollEvent     web_PollEvent
 #define SDL_WaitEvent     web_WaitEvent
 #define SDL_GL_SwapBuffers web_SwapBuffers
 #define SDL_SetVideoMode  web_SetVideoMode
+#define SDL_PauseAudio    web_PauseAudio
 
 #endif

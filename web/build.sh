@@ -31,11 +31,12 @@ emcc -O2 -Wno-everything \
   -sUSE_SDL=1 -sLEGACY_GL_EMULATION=1 -sGL_UNSAFE_OPTS=0 \
   -sASYNCIFY=1 -sASYNCIFY_STACK_SIZE=65536 \
   -sALLOW_MEMORY_GROWTH=1 -sINITIAL_MEMORY=64MB -sSTACK_SIZE=1MB \
-  -sEXPORTED_FUNCTIONS=_main,_web_on_hide \
-  -sEXPORTED_RUNTIME_METHODS=ccall,callMain,FS,IDBFS,addRunDependency,removeRunDependency \
+  -sEXPORTED_FUNCTIONS=_main,_web_on_hide,_web_audio_pull \
+  -sEXPORTED_RUNTIME_METHODS=HEAP16,ccall,callMain,FS,IDBFS,addRunDependency,removeRunDependency \
   -sFORCE_FILESYSTEM=1 -lidbfs.js \
   --exclude-file '*extra.bin' \
   $PRELOAD \
+  --pre-js web/audio.js \
   --shell-file web/shell.html \
   -o "$OUT/index.html"
 

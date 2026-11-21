@@ -134,3 +134,29 @@ EMSCRIPTEN_KEEPALIVE void web_on_hide( void )
 {
   save_game();
 }
+
+/*
+** Audio: one continuous ScriptProcessor stream. The game mixes at its own
+** rate (44.1 kHz) in small blocks; JS resamples linearly to the device rate
+** across block boundaries, so there are no gaps or clicks between chunks.
+*/
+#define WEB_AUDIO_FRAMES 1024
+static void (*audio_cb)( void *, Sint8 *, int ) = NULL;
+static Sint16 audio_block[WEB_AUDIO_FRAMES*2];
+
+EMSCRIPTEN_KEEPALIVE Sint16 *web_audio_pull( void )
+{
+  audio_cb( NULL, (Sint8 *)audio_block, sizeof(audio_block) );
+  return audio_block;
+}
+
+int web_OpenAudio( void (*cb)( void *, Sint8 *, int ), int freq )
+{
+  audio_cb = cb;
+  return EM_ASM_INT({ return Module.startAudio($0, $1); }, freq, WEB_AUDIO_FRAMES );
+}
+
+void web_PauseAudio( int pause )
+{
+  EM_ASM({ Module.gAudioPaused = !!$0; }, pause);
+}
