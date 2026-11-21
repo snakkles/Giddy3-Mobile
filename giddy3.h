@@ -6,6 +6,11 @@
 #ifndef BASEPATH
 #define BASEPATH
 #endif
+
+/* Where saves/settings live (writable, persisted separately on the web) */
+#ifndef SAVEPATH
+#define SAVEPATH BASEPATH
+#endif
 //#define BASEPATH "/media/cryptofs/apps/usr/palm/applications/com.pgordon.giddy3/"
 
 #ifndef TRUE

@@ -141,9 +141,12 @@ void destroy_save_game( void )
 		unlink(BASEPATH_ALT"hats/extra.bin");
 	else
 #endif
-		unlink(BASEPATH"hats/extra.bin");
+		unlink(SAVEPATH"hats/extra.bin");
 
 	savegame_available = SDL_FALSE;
+#ifdef __EMSCRIPTEN__
+	web_SyncSaves();
+#endif
 }
 
 void save_game( void )
@@ -208,13 +211,16 @@ void save_game( void )
 		f = gzopen( BASEPATH_ALT"hats/extra.bin", "wb" );
 	else
 #endif
-		f = gzopen( BASEPATH"hats/extra.bin", "wb" );
+		f = gzopen( SAVEPATH"hats/extra.bin", "wb" );
 
 	if( !f ) return;
 
 	gzwrite(f, savegamebuf, savegame_size);
 	gzwrite(f, &chksum, sizeof(chksum));
 	gzclose( f );
+#ifdef __EMSCRIPTEN__
+	web_SyncSaves();
+#endif
 }
 
 void load_game( void )
@@ -230,7 +236,7 @@ void load_game( void )
 		f = gzopen( BASEPATH_ALT"hats/extra.bin", "rb" );
 	else
 #endif
-		f = gzopen( BASEPATH"hats/extra.bin", "rb" );
+		f = gzopen( SAVEPATH"hats/extra.bin", "rb" );
 
 	if( !f ) return;
 
@@ -311,13 +317,16 @@ void save_options( void )
 		f = fopen( BASEPATH_ALT"settings.txt", "w" );
 	else
 #endif
-		f = fopen( BASEPATH"settings.txt", "w" );
+		f = fopen( SAVEPATH"settings.txt", "w" );
 	if( !f ) return;
 
 	fprintf( f, "sfxvol %d\n", sfxvolopt );
 	fprintf( f, "musicvol %d\n", musicvolopt );
 	fprintf( f, "icade %d\n", icademode );
 	fclose( f );
+#ifdef __EMSCRIPTEN__
+	web_SyncSaves();
+#endif
 }
 
 void load_options( void )
@@ -330,7 +339,7 @@ void load_options( void )
 		f = fopen( BASEPATH_ALT"settings.txt", "r" );
 	else
 #endif
-		f = fopen( BASEPATH"settings.txt", "r" );
+		f = fopen( SAVEPATH"settings.txt", "r" );
 
 	if( !f ) return;
 

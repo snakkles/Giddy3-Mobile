@@ -162,7 +162,11 @@ void initsounds( void )
   wanted.freq     = FREQ; 
   wanted.format   = AUDIO_S16SYS; 
   wanted.channels = 2; /* 1 = mono, 2 = stereo */
+#ifdef __EMSCRIPTEN__
+  wanted.samples  = 2048; /* Web audio needs a power of two (<= SNDBUFFERLEN/4) */
+#else
   wanted.samples  = SNDBUFFERLEN/4;
+#endif
 
   wanted.callback = (void*)audio_callback;
   wanted.userdata = NULL;
